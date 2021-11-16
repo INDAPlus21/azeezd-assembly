@@ -2,17 +2,19 @@ cal 16
 get #0 $11
 cal 16
 get #1 $11
-mov #0 $12
-mov #0 $13
+mov #0 $1
+mov #1 $2
+get #1 $0
 mul_loop:
-    cal 3
-    get #0 $11
-    mov #1 $12
+    cal 1
+    get #1 $11
+    get #0 $2
     cal 8
-    mov #1 $12
-    cmp #1 $0
+    get #0 $11
+    cmp #0 $0
+    mov #0 $2
+    get #0 $1
     jig mul_loop
-get #0 $11
-mov #0 $12
+mov #1 $12
 cal 17
 cal 0

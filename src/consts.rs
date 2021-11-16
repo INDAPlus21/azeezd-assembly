@@ -1,6 +1,7 @@
 // === CONSTANTS ===
-pub const INSTRUCTION_SIZE : u8 = 8;
-pub const REGISTER_AMOUNT  : u8 = 16;
+pub const INSTRUCTION_SIZE : usize = 8;
+pub const REGISTER_AMOUNT  : usize = 16;
+pub const R_DMR_AMOUNT     : usize = 2;
 
 pub const OP_SET : u8 = 0b000_00000;
 pub const OP_MOV : u8 = 0b001_00000;
@@ -26,6 +27,9 @@ pub const C_XOR : u8  = 5;
 pub const C_NOT : u8  = 6;
 pub const C_INC : u8  = 7;
 pub const C_DEC : u8  = 8;
+
+// Program specific
+pub const C_PC  : u8  = 9;
 
 // IO
 pub const C_GETI : u8 = 16;

@@ -19,7 +19,7 @@ pub fn compile(filename: String) {
             for inst in instructions {
                 let mut _instruction_as_byte : u8 = 0;
                 
-                let tokens : Vec<String>= inst
+                let tokens : Vec<String> = inst
                                 .split_whitespace()
                                 .map(|_token| _token.to_string())
                                 .collect();
@@ -65,8 +65,10 @@ pub fn compile(filename: String) {
                         if tokens[0] != "cal" { // IF any jump instruction
                             // Calculate step difference and store it as 5 bits in the instruction
                             let jump_size  = (*labels.get(&tokens[1]).unwrap() as i32) - program_counter as i32;
-                            let jump_size : u8 = (((jump_size >> 27) & 16) | (jump_size & 15)) as u8;
-                            _instruction_as_byte |= jump_size;
+                            if jump_size < 0 {
+                                _instruction_as_byte |= 0b000_1_0000
+                            }
+                            _instruction_as_byte |= jump_size.abs() as u8;
                         }
                     }
                     _ => {}
@@ -75,12 +77,13 @@ pub fn compile(filename: String) {
                 program_counter += 1;
                 instruction_bits.push(_instruction_as_byte);
             }
-            let mut out_file = File::create(format!("out.vivex")).expect("Failed to create executeable file!");
-            out_file.write_all(&instruction_bits).expect("Error while writing to execulteable file");                             
+            instruction_bits.push(consts::OP_CAL | consts::C_EXIT); // TERMINATE PROG INSTRUCTION (Added for safety and control)
+
+            let mut out_file = File::create(format!("o.vivex")).expect("Failed to create executeable file!");
+            out_file.write_all(&instruction_bits).expect("Error while writing to execulteable file");
         }
         Err(_error) => {
             println!("Compilation Error!");
         }
-    }
-                                          
+    }                                      
 }

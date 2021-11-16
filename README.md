@@ -1,5 +1,14 @@
 # Azeez Daoud - Assembly Language - VIVEC
-Named after the Lord Vivec (one of the God-kings of Morrowind).
+Named after the Lord Vivec, one of the God-kings of Morrowind. (Don't judge me, I was listening to The Elder Scrolls OST while doing this assignment).
+
+# Compiling and Running (Emulated)
+Currently running can be done through cargo.
+
+- For compiling do `cargo run c yourSourceFile.viv`
+- For running do `cargo run r yourexecuteable.viv`
+- For compiling and running do `cargo run cr yourSourceFile.viv`
+
+NOTE! There are no error-checking as of this commit!
 
 # Registers
 There are two sets of registers, **Directly** and **Indirectly** Manipulated Registers (DMR and IMR). There are 2 DMRs and 15+1 IMRs ($0 is constant).
@@ -13,7 +22,8 @@ The DMRs are accessed using `#0` and `#1`,
 |`$0`           |Always equals to 0             |
 |`$1...$10`     |Registers for general usage    |
 |`$11`          |Result of a system call        |
-|`$12, $13`     |Argument 0-1 for system calls  |
+|`$12`          |Argument for system calls      |
+|`$13`          |Return address                 |
 |`$14, $15`     |Assembler temporaries          |
 
 
@@ -25,22 +35,23 @@ There are two main types of instructions. **Branching** and **Manipulation** Ins
 |`set`        |`set #DMR IMM`   |  `#DMR := immediate`                                                                  |
 |`mov`        |`mov #DMR $IMR`  |  `$IMR := #DMR`                                                                       |
 |`get`        |`get #DMR $IMR`  |  `#DMR := $IMR`                                                                       |
-|`cmp`        |`cmp #DMR $IMR`  |  `($11, $12) := if #DMR > $IMR then (1,0) else if #DMR < $IMR then (0,1) else (0,0)`  |
+|`cmp`        |`cmp #DMR $IMR`  |  `($14, $15) := if #DMR > $IMR then (1,0) else if #DMR < $IMR then (0,1) else (0,0)`  |
 |`jmp`        |`jmp label`      |  `PC := label`                                                                        |
-|`jie`        |`jio label`      |  `PC := if ($14, $15) == (0,0) then label else PC`                                    | 
+|`jie`        |`jie label`      |  `PC := if ($14, $15) == (0,0) then label else PC`                                    | 
 |`jig`        |`jig label`      |  `PC := if ($14, $15) == (1,0) then label else PC`                                    |
 |`cal`        |`cal callcode`   |  See table below                                                                      |
 
-| Name      | Code  | Parameters                        | 
-|---        |---    |---                                |
-|exit       |0      | None                              |    
-|add        |1      | `$11 = $12 + $13`                 |
-|sub        |2      | `$11 = $12 - $13`                 |
-|and        |3      | `$11 = $12 & $13`                 |
-|or         |4      | `$11 = $12 | $13`                 |
-|xor        |5      | `$11 = $12 ^ $13`                 |
-|not        |6      | `$11 = ¬$12`                      |
-|increment  |7      | `$11 = $12 + 1`                   |
-|decrement  |8      | `$11 = $12 - 1`                   |
-|get integer|16     | `$11 = next 32-bit int from stdin`|
-|put integer|17     | write value of $12 to `stdout`    |
+| Name                  | Code  | Parameters                            | 
+|---                    |---    |---                                    |
+|exit                   |0      | None                                  |    
+|add                    |1      | `$11 = #0 + #1`                       |
+|sub                    |2      | `$11 = #0 - #1`                       |
+|and                    |3      | `$11 = #0 & #1`                       |
+|or                     |4      | `$11 = #0 | #1`                       |
+|xor                    |5      | `$11 = #0 ^ #1`                       |
+|not                    |6      | `$11 = ¬#0`                           |
+|increment              |7      | `$11 = #0 + 1`                        |
+|decrement              |8      | `$11 = #0 - 1`                        |
+|instruction register   |9      | `$13 = program counter`               |
+|get integer            |16     | `$11 = next 32-bit int from stdin`    |
+|put integer            |17     | write value of `$12` to `stdout`      |
