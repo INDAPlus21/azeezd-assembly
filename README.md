@@ -58,3 +58,6 @@ There are two main types of instructions. **Branching** and **Manipulation** Ins
 |Set program counter    |10     | `program counter = $13`                       |
 |get integer            |11     | `$11 = next unsigned 32-bit int from stdin`   |
 |put integer            |12     | write unsigned value of `$12` to `stdout`     |
+
+## Bit Representation
+![bit representation of the instructions](./images/instruction_set.png)
