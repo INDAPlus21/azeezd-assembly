@@ -4,9 +4,11 @@ Named after the Lord Vivec, one of the God-kings of Morrowind. (Don't judge me, 
 # Compiling and Running (Emulated)
 Currently running can be done through cargo.
 
-- For compiling do `cargo run c yourSourceFile.viv`
+- For compiling do `cargo run c yourSourceFile.viv outputFileName`
 - For running do `cargo run r yourexecuteable.viv`
-- For compiling and running do `cargo run cr yourSourceFile.viv`
+- For compiling and running do `cargo run cr yourSourceFile.viv outputFileName`
+
+(`outputFileName` is optional. Default will be `out.vivex`)
 
 NOTE! There are no error-checking as of this commit!
 

@@ -51,6 +51,8 @@ pub mod error_handling {
     pub const E_UNKNOWN_SYSTEM_CALL_ERROR : &str = "Error while calling an unknown system call";
     pub const E_STANDARD_INPUT_STREAM_READ_FAILURE : &str = "Failed to read from the standard input stream";
     pub const E_READING_EXECUTEABLE_FAILURE : &str = "Failed to read the executeable file.";
+    pub const E_WRONG_FILE_TYPE_ERROR : &str = "Wrong file type was passed.";
+    pub const E_NO_FILE_PROVIDED : &str = "No file was provided for compilation or emulation.";
 
     pub fn panic_at_instruction(error_message: &str, program_counter_at_error: usize)
     {

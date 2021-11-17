@@ -4,7 +4,7 @@ use std::fs::File;
 use std::collections::{HashMap};
 use std::io::prelude::*;
 
-pub fn compile(filename: String) {
+pub fn compile(filename: String, output: &Option<String>) {
     let mut program_counter = 0;
     let mut labels : HashMap<String, usize> = HashMap::new();
     let mut instruction_bits : Vec<u8> = Vec::new();
@@ -101,7 +101,13 @@ pub fn compile(filename: String) {
             instruction_bits.push(consts::OP_CAL | consts::C_EXIT); // TERMINATE PROG INSTRUCTION (Added for safety and control)
 
             
-            let mut out_file = File::create("out.vivex").expect(consts::error_handling::E_EXECUTEABLE_CREATION_FAILURE);
+            let mut out_file = File::create(
+                match output {
+                    None => "out.vivex".to_string(),
+                    Some(p) => p.to_string()
+                }
+            ).expect(consts::error_handling::E_EXECUTEABLE_CREATION_FAILURE);
+
             out_file.write_all(&instruction_bits).expect(consts::error_handling::E_WRITE_TO_EXECUTEABLE_FAILURE);
         }
         Err(_error) => {
