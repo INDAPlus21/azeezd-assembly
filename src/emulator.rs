@@ -34,18 +34,22 @@ pub fn emulate(filename: String) {
             },
 
             consts::OP_JMP => {
-                program_counter = (program_counter as isize + calculate_jump(&instruction) - 1) as usize;
+                REGISTERS[13] = program_counter as u32;
+                program_counter = (program_counter as isize + calculate_jump(&instruction)) as usize;
+                continue;
             },
 
             consts::OP_JIE => {
                 if REGISTERS[14] == 0 && REGISTERS[15] == REGISTERS[14] {
-                    program_counter = (program_counter as isize + calculate_jump(&instruction) - 1) as usize;
+                    program_counter = (program_counter as isize + calculate_jump(&instruction)) as usize;
+                    continue;
                 }
             },
 
             consts::OP_JIG => {
                 if REGISTERS[14] == 1 && REGISTERS[15] == 0 {
-                    program_counter = (program_counter as isize + calculate_jump(&instruction) - 1) as usize;
+                    program_counter = (program_counter as isize + calculate_jump(&instruction)) as usize;
+                    continue;
                 }
             },
 
@@ -60,6 +64,7 @@ pub fn emulate(filename: String) {
                     consts::C_INC  => {REGISTERS[11] = R_DMR[0] + 1;},
                     consts::C_DEC  => {REGISTERS[11] = R_DMR[0] - 1;},
                     consts::C_PC   => {REGISTERS[13] = program_counter as u32;},
+                    consts::C_RET  => {program_counter = REGISTERS[13] as usize;},
                     consts::C_GETI => {
                         let mut input = String::new();
                         std::io::stdin().read_line(&mut input).expect("Failed to read from Standard Input Stream");
@@ -71,25 +76,26 @@ pub fn emulate(filename: String) {
             }
             _ => {}
         }
-
         program_counter += 1;
     }
 }
 
+/// == Get appropiate bits through masking
+
 fn get_operation(instruction: &u8) -> u8 {
-    instruction & 0b111_00000
+    instruction & consts::OP_MSK
 }
 
 fn get_dmr(instruction: &u8) -> u8 {
-    (instruction & 0b000_1_0000) >> 4
+    (instruction & consts::DMR_MSK) >> 4
 }
 
 fn get_register(instruction: &u8) -> u8 {
-    instruction & 0b0000_1111
+    instruction & consts::REG_MSK
 }
 
 fn get_call_code(instruction: &u8) -> u8 {
-    instruction & 0b000_11111
+    instruction & consts::CAL_MSK
 }
 
 fn calculate_jump(instruction: &u8) -> isize {

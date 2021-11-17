@@ -6,15 +6,26 @@ use std::io::prelude::*;
 
 pub fn compile(filename: String) {
     let mut program_counter = 0;
-    let mut labels : HashMap<String, u32> = HashMap::new();
+    let mut labels : HashMap<String, usize> = HashMap::new();
     let mut instruction_bits : Vec<u8> = Vec::new();
     match fs::read_to_string(filename)
     {
         Ok(_text) => {
             let instructions : Vec<String> = _text
                                                 .lines()
-                                                .map(|_line| _line.to_string())
+                                                .map(|_line| _line.trim().to_string())
+                                                .filter(|_line| _line.len() > 0)
                                                 .collect();
+
+            // Get labels and store their position to the hashmap
+            let mut instruction_shift = 0;
+            for instr_idx in 0..instructions.len() {
+                let _line = &instructions[instr_idx];
+                if _line.ends_with(':') {
+                    labels.insert(_line[.._line.len()-1].to_string(), instr_idx - instruction_shift);
+                    instruction_shift += 1;
+                }
+            }
 
             for inst in instructions {
                 let mut _instruction_as_byte : u8 = 0;
@@ -23,9 +34,9 @@ pub fn compile(filename: String) {
                                 .split_whitespace()
                                 .map(|_token| _token.to_string())
                                 .collect();
+
                 match tokens.len() {
                     1 => { // LABELS
-                        labels.insert(tokens[0][0..tokens[0].len()-1].to_string(), program_counter);
                         continue;
                     },
                     3 => { // MANIPULATION INSTRUCTIONS

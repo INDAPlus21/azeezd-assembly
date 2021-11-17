@@ -36,7 +36,7 @@ There are two main types of instructions. **Branching** and **Manipulation** Ins
 |`mov`        |`mov #DMR $IMR`  |  `$IMR := #DMR`                                                                       |
 |`get`        |`get #DMR $IMR`  |  `#DMR := $IMR`                                                                       |
 |`cmp`        |`cmp #DMR $IMR`  |  `($14, $15) := if #DMR > $IMR then (1,0) else if #DMR < $IMR then (0,1) else (0,0)`  |
-|`jmp`        |`jmp label`      |  `PC := label`                                                                        |
+|`jmp`        |`jmp label`      |  `PC := label` and `$13 = PC + 1`                                                     |
 |`jie`        |`jie label`      |  `PC := if ($14, $15) == (0,0) then label else PC`                                    | 
 |`jig`        |`jig label`      |  `PC := if ($14, $15) == (1,0) then label else PC`                                    |
 |`cal`        |`cal callcode`   |  See table below                                                                      |
@@ -53,5 +53,6 @@ There are two main types of instructions. **Branching** and **Manipulation** Ins
 |increment              |7      | `$11 = #0 + 1`                        |
 |decrement              |8      | `$11 = #0 - 1`                        |
 |instruction register   |9      | `$13 = program counter`               |
+|Set program counter    |10     | `program counter = $13`               |
 |get integer            |16     | `$11 = next 32-bit int from stdin`    |
 |put integer            |17     | write value of `$12` to `stdout`      |
