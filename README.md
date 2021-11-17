@@ -41,18 +41,18 @@ There are two main types of instructions. **Branching** and **Manipulation** Ins
 |`jig`        |`jig label`      |  `PC := if ($14, $15) == (1,0) then label else PC`                                    |
 |`cal`        |`cal callcode`   |  See table below                                                                      |
 
-| Name                  | Code  | Parameters                            | 
-|---                    |---    |---                                    |
-|exit                   |0      | None                                  |    
-|add                    |1      | `$11 = #0 + #1`                       |
-|sub                    |2      | `$11 = #0 - #1`                       |
-|and                    |3      | `$11 = #0 & #1`                       |
-|or                     |4      | `$11 = #0 | #1`                       |
-|xor                    |5      | `$11 = #0 ^ #1`                       |
-|not                    |6      | `$11 = ¬#0`                           |
-|increment              |7      | `$11 = #0 + 1`                        |
-|decrement              |8      | `$11 = #0 - 1`                        |
-|instruction register   |9      | `$13 = program counter`               |
-|Set program counter    |10     | `program counter = $13`               |
-|get integer            |16     | `$11 = next 32-bit int from stdin`    |
-|put integer            |17     | write value of `$12` to `stdout`      |
+| Name                  | Code  | Parameters                                    | 
+|---                    |---    |---                                            |
+|exit                   |0      | None                                          |    
+|add                    |1      | `$11 = #0 + #1`                               |
+|sub                    |2      | `$11 = #0 - #1`                               |
+|and                    |3      | `$11 = #0 & #1`                               |
+|or                     |4      | `$11 = #0 | #1`                               |
+|xor                    |5      | `$11 = #0 ^ #1`                               |
+|not                    |6      | `$11 = ¬#0`                                   |
+|increment              |7      | `$11 = #0 + 1`                                |
+|decrement              |8      | `$11 = #0 - 1`                                |
+|instruction register   |9      | `$13 = program counter`                       |
+|Set program counter    |10     | `program counter = $13`                       |
+|get integer            |11     | `$11 = next unsigned 32-bit int from stdin`   |
+|put integer            |12     | write unsigned value of `$12` to `stdout`     |

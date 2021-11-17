@@ -9,7 +9,7 @@ pub fn emulate(filename: String) {
 
     // Assembler Data
     let mut program_counter : usize = 0;
-    let instructions = fs::read(filename).expect("Error reading executeable.");
+    let instructions = fs::read(filename).expect(consts::error_handling::E_READING_EXECUTEABLE_FAILURE);
     while instructions[program_counter] != (consts::OP_CAL | consts::C_EXIT) {
         let instruction = instructions[program_counter];
         match get_operation(&instruction) {
@@ -67,7 +67,7 @@ pub fn emulate(filename: String) {
                     consts::C_RET  => {program_counter = REGISTERS[13] as usize;},
                     consts::C_GETI => {
                         let mut input = String::new();
-                        std::io::stdin().read_line(&mut input).expect("Failed to read from Standard Input Stream");
+                        std::io::stdin().read_line(&mut input).expect(consts::error_handling::E_STANDARD_INPUT_STREAM_READ_FAILURE);
                         REGISTERS[11] = input.trim().parse::<u32>().unwrap();
                     },
                     consts::C_PUTI => {print!("{}", REGISTERS[12])}

@@ -57,8 +57,11 @@ pub fn compile(filename: String) {
                         }
                         if tokens[0] != "set"
                         {
-                            _instruction_as_byte |= tokens[2][1..]
-                                                        .parse::<u8>().unwrap();
+                            let value = tokens[2][1..].parse::<u8>().unwrap();
+                            if tokens[0] == "mov" && value == 0 {
+                                consts::error_handling::panic_at_instruction(consts::error_handling::E_MODIFYING_ZEROTH_REGISTER_ERROR, program_counter);
+                            }
+                            _instruction_as_byte |= value;
                         }
                     },
                     2 => { // if 2: BRANCHING INSTRUCTIONS
@@ -68,7 +71,14 @@ pub fn compile(filename: String) {
                             "jig" => {_instruction_as_byte |= consts::OP_JIG;},
                             "cal" => {
                                 _instruction_as_byte |= consts::OP_CAL;
-                                _instruction_as_byte |= tokens[1].parse::<u8>().unwrap();
+
+                                let code = tokens[1].parse::<u8>().unwrap();
+                                if check_call_existance(code) {
+                                    _instruction_as_byte |= code;
+                                }
+                                else {
+                                    consts::error_handling::panic_at_instruction(consts::error_handling::E_UNKNOWN_SYSTEM_CALL_ERROR, program_counter);
+                                }
                             },
                             _ => {}
                         }
@@ -90,11 +100,16 @@ pub fn compile(filename: String) {
             }
             instruction_bits.push(consts::OP_CAL | consts::C_EXIT); // TERMINATE PROG INSTRUCTION (Added for safety and control)
 
-            let mut out_file = File::create(format!("o.vivex")).expect("Failed to create executeable file!");
-            out_file.write_all(&instruction_bits).expect("Error while writing to execulteable file");
+            
+            let mut out_file = File::create("out.vivex").expect(consts::error_handling::E_EXECUTEABLE_CREATION_FAILURE);
+            out_file.write_all(&instruction_bits).expect(consts::error_handling::E_WRITE_TO_EXECUTEABLE_FAILURE);
         }
         Err(_error) => {
-            println!("Compilation Error!");
+            panic!("{}", consts::error_handling::E_COMPILATION_ERROR);
         }
     }                                      
+}
+
+fn check_call_existance(code: u8) -> bool {
+    code < 13
 }

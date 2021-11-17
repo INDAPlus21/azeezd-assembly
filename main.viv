@@ -1,4 +1,4 @@
-cal 16
+cal 11
 get #0 $11
 get #1 $11
 mov #0 $3
@@ -14,7 +14,7 @@ fac_loop:
 
 end:
     mov #1 $12
-    cal 17
+    cal 12
     cal 0
 
 multiply:

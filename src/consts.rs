@@ -1,5 +1,4 @@
 // === CONSTANTS ===
-pub const INSTRUCTION_SIZE : usize = 8;
 pub const REGISTER_AMOUNT  : usize = 16;
 pub const R_DMR_AMOUNT     : usize = 2;
 
@@ -39,5 +38,22 @@ pub const C_PC  : u8  = 9;
 pub const C_RET : u8  = 10;
 
 // IO
-pub const C_GETI : u8 = 16;
-pub const C_PUTI : u8 = 17;
+pub const C_GETI : u8 = 11;
+pub const C_PUTI : u8 = 12;
+
+
+// ERRORS
+pub mod error_handling {
+    pub const E_EXECUTEABLE_CREATION_FAILURE : &str = "Failed to create executeable file";
+    pub const E_WRITE_TO_EXECUTEABLE_FAILURE : &str = "Failed to write into executeable";
+    pub const E_COMPILATION_ERROR : &str = "Error occured while compiling";
+    pub const E_MODIFYING_ZEROTH_REGISTER_ERROR : &str = "Error while trying to move value into non-modifeable register $0";
+    pub const E_UNKNOWN_SYSTEM_CALL_ERROR : &str = "Error while calling an unknown system call";
+    pub const E_STANDARD_INPUT_STREAM_READ_FAILURE : &str = "Failed to read from the standard input stream";
+    pub const E_READING_EXECUTEABLE_FAILURE : &str = "Failed to read the executeable file.";
+
+    pub fn panic_at_instruction(error_message: &str, program_counter_at_error: usize)
+    {
+        panic!("{} At instruction: {}", error_message, program_counter_at_error + 1);
+    }
+}
