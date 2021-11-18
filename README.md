@@ -49,8 +49,8 @@ There are two main types of instructions. **Branching** and **Manipulation** Ins
 |add                    |1      | `$11 = #0 + #1`                               |
 |sub                    |2      | `$11 = #0 - #1`                               |
 |and                    |3      | `$11 = #0 & #1`                               |
-|or                     |4      | `$11 = #0 | #1`                               |
-|xor                    |5      | `$11 = #0 ^ #1`                               |
+|or                     |4      | `$11 = #0 \| #1`                              |
+|xor                    |5      | `$11 = #0 \^ #1`                              |
 |not                    |6      | `$11 = ¬#0`                                   |
 |increment              |7      | `$11 = #0 + 1`                                |
 |decrement              |8      | `$11 = #0 - 1`                                |
