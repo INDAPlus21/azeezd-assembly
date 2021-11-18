@@ -5,7 +5,7 @@ Named after the Lord Vivec, one of the God-kings of Morrowind. (Don't judge me, 
 Currently compiling and running can be done through Rust's Package Manager, Cargo.
 
 - For compiling do `cargo run c yourSourceFile.viv outputFileName`
-- For running do `cargo run r yourexecuteable.viv`
+- For running do `cargo run r yourexecuteable.vivex`
 - For compiling and running do `cargo run cr yourSourceFile.viv outputFileName`
 
 (`outputFileName` is optional. Default will be `out.vivex`)
