@@ -2,15 +2,13 @@
 Named after the Lord Vivec, one of the God-kings of Morrowind. (Don't judge me, I was listening to The Elder Scrolls OST while doing this assignment).
 
 # Compiling and Running (Emulated)
-Currently running can be done through cargo.
+Currently compiling and running can be done through Rust's Package Manager, Cargo.
 
 - For compiling do `cargo run c yourSourceFile.viv outputFileName`
 - For running do `cargo run r yourexecuteable.viv`
 - For compiling and running do `cargo run cr yourSourceFile.viv outputFileName`
 
 (`outputFileName` is optional. Default will be `out.vivex`)
-
-NOTE! There are no error-checking as of this commit!
 
 # Registers
 There are two sets of registers, **Directly** and **Indirectly** Manipulated Registers (DMR and IMR). There are 2 DMRs and 15+1 IMRs ($0 is constant).
@@ -39,7 +37,7 @@ There are two main types of instructions. **Branching** and **Manipulation** Ins
 |`get`        |`get #DMR $IMR`  |  `#DMR := $IMR`                                                                       |
 |`cmp`        |`cmp #DMR $IMR`  |  `($14, $15) := if #DMR > $IMR then (1,0) else if #DMR < $IMR then (0,1) else (0,0)`  |
 |`jmp`        |`jmp label`      |  `PC := label` and `$13 = PC + 1`                                                     |
-|`jie`        |`jie label`      |  `PC := if ($14, $15) == (0,0) then label else PC`                                    | 
+|`jie`        |`jie label`      |  `PC := if ($14, $15) == (0,0) then label else PC`<sup>1</sup>                        | 
 |`jig`        |`jig label`      |  `PC := if ($14, $15) == (1,0) then label else PC`                                    |
 |`cal`        |`cal callcode`   |  See table below                                                                      |
 
@@ -54,10 +52,12 @@ There are two main types of instructions. **Branching** and **Manipulation** Ins
 |not                    |6      | `$11 = ¬#0`                                   |
 |increment              |7      | `$11 = #0 + 1`                                |
 |decrement              |8      | `$11 = #0 - 1`                                |
-|instruction register   |9      | `$13 = program counter`                       |
-|Set program counter    |10     | `program counter = $13`                       |
+|instruction register   |9      | `$13 = PC`                                    |
+|Set program counter    |10     | `PC = $13`                                    |
 |get integer            |11     | `$11 = next unsigned 32-bit int from stdin`   |
-|put integer            |12     | write unsigned value of `$12` to `stdout`     |
+|put integer            |12     | Write unsigned value of `$12` to `stdout`     |
+
+<sup>1. PC: Program Counter</sup>
 
 ## Bit Representation
 ![bit representation of the instructions](./images/instruction_set.png)
