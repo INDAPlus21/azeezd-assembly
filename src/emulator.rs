@@ -10,8 +10,14 @@ pub fn emulate(filename: String) {
     // Assembler Data
     let mut program_counter : usize = 0;
     let instructions = fs::read(filename).expect(consts::error_handling::E_READING_EXECUTEABLE_FAILURE);
-    while instructions[program_counter] != (consts::OP_CAL | consts::C_EXIT) {
+
+    // Run while not reaching syscall code 0 (exit call)
+    while instructions[program_counter] != (consts::OP_CAL | consts::C_EXIT) { 
+
+        // Fetch instruction
         let instruction = instructions[program_counter];
+
+        // OPCODE
         match get_operation(&instruction) {
             consts::OP_SET => {
                 R_DMR[get_dmr(&instruction) as usize] = get_register(&instruction) as u32; // register param is the same as immediate for set operation
@@ -36,20 +42,20 @@ pub fn emulate(filename: String) {
             consts::OP_JMP => {
                 REGISTERS[13] = program_counter as u32;
                 program_counter = (program_counter as isize + calculate_jump(&instruction)) as usize;
-                continue;
+                continue; // Jumping should not jump over current instruction it jumps two, thus continuing to avoid program_counter increment
             },
 
             consts::OP_JIE => {
                 if REGISTERS[14] == 0 && REGISTERS[15] == REGISTERS[14] {
                     program_counter = (program_counter as isize + calculate_jump(&instruction)) as usize;
-                    continue;
+                    continue; // Same as above
                 }
             },
 
             consts::OP_JIG => {
                 if REGISTERS[14] == 1 && REGISTERS[15] == 0 {
                     program_counter = (program_counter as isize + calculate_jump(&instruction)) as usize;
-                    continue;
+                    continue; // Same as above
                 }
             },
 
@@ -66,6 +72,7 @@ pub fn emulate(filename: String) {
                     consts::C_PC   => {REGISTERS[13] = program_counter as u32;},
                     consts::C_RET  => {program_counter = REGISTERS[13] as usize;},
                     consts::C_GETI => {
+                        // Read from STDIN and store
                         let mut input = String::new();
                         std::io::stdin().read_line(&mut input).expect(consts::error_handling::E_STANDARD_INPUT_STREAM_READ_FAILURE);
                         REGISTERS[11] = input.trim().parse::<u32>().unwrap();
@@ -82,22 +89,27 @@ pub fn emulate(filename: String) {
 
 /// == Get appropiate bits through masking
 
+/// Get OPCODE bits
 fn get_operation(instruction: &u8) -> u8 {
     instruction & consts::OP_MSK
 }
 
+/// Get destination DMR bit
 fn get_dmr(instruction: &u8) -> u8 {
     (instruction & consts::DMR_MSK) >> 4
 }
 
+/// Get destination IMR bits (or immediate value)
 fn get_register(instruction: &u8) -> u8 {
     instruction & consts::REG_MSK
 }
 
+/// Get syscall code bits
 fn get_call_code(instruction: &u8) -> u8 {
     instruction & consts::CAL_MSK
 }
 
+/// Calculates difference between current and target instruction
 fn calculate_jump(instruction: &u8) -> isize {
     let destination : isize = (instruction & 0b1111) as isize;
     if instruction & 0b000_1_0000 == 0b000_1_0000 {
