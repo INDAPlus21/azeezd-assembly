@@ -74,6 +74,10 @@ pub fn compile(filename: String, output: &Option<String>) {
                         {
                             // Get IMR destination or Immediate
                             let value = tokens[2][1..].parse::<u8>().unwrap();
+                            
+                            if value as usize >= consts::REGISTER_AMOUNT {
+                                consts::error_handling::panic_at_instruction(consts::error_handling::E_UNKNOWN_DESTINATION_IMR, program_counter);
+                            }
 
                             // Overwriting zeroth register
                             if tokens[0] == "mov" && value == 0 {
